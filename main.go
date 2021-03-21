@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"github.com/enohr/imgutil-go/effects"
 	"image"
 	"image/jpeg"
 	_ "image/jpeg"
@@ -9,8 +11,11 @@ import (
 )
 
 func main() {
-	img := getFileFromPath("image1.jpg")
-	saveImage("image2.jpg", img)
+	img := getFileFromPath("image.jpg")
+	newImg := effects.GaussianBlur(img, 3)
+
+	fmt.Println(newImg.Bounds().Size().Y)
+	saveImage("blurredImage.jpg", newImg)
 }
 
 func getFileFromPath(path string) (img image.Image) {
