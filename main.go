@@ -12,9 +12,7 @@ import (
 
 func main() {
 	img := getFileFromPath("image.jpg")
-	newImg := effects.GaussianBlur(img, 3)
-
-	fmt.Println(newImg.Bounds().Size().Y)
+	newImg := effects.GaussianBlur(img, 7, 11)
 	saveImage("blurredImage.jpg", newImg)
 }
 
