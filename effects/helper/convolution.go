@@ -6,11 +6,11 @@ import (
 )
 
 func Convolution(img image.Image, kernel [][]float64, radius int) (newImage *image.RGBA) {
-	xSize := img.Bounds().Size().X
-	ySize := img.Bounds().Size().Y
+	xSize := img.Bounds().Max.X
+	ySize := img.Bounds().Max.Y
 	newImage = image.NewRGBA(image.Rectangle{Min: image.Point{}, Max: image.Point{X: xSize, Y: ySize}})
-	for x := 0; x < xSize; x++ {
-		for y := 0; y < ySize; y++ {
+	for x := img.Bounds().Min.X; x < xSize; x++ {
+		for y := img.Bounds().Min.Y; y < ySize; y++ {
 			var redValue, greenValue, blueValue float64
 			for kernelX := 0; kernelX < len(kernel); kernelX++ {
 				for kernelY := 0; kernelY < len(kernel); kernelY++ {
