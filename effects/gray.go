@@ -3,23 +3,32 @@ package effects
 import (
 	"github.com/enohr/imgutil-go/effects/helper"
 	"image"
-	"image/color"
 )
 
-func Gray(img image.Image) (grayImage *image.Gray16) {
-	xSize := img.Bounds().Size().X
-	ySize := img.Bounds().Size().Y
-	grayImage = image.NewGray16(image.Rectangle{Min: image.Point{}, Max: image.Point{X: xSize, Y: ySize}})
+func Gray(img image.Image) (grayImage *image.RGBA) {
+	finalX, finalY := img.Bounds().Dx(), img.Bounds().Dy()
+	startX, startY := img.Bounds().Min.X, img.Bounds().Min.Y
 
-	for x := 0; x < xSize; x++ {
-		for y := 0; y < ySize; y++ {
-			red, green, blue, _ := img.At(x, y).RGBA()
+	copyImage := helper.CopyImage(img)
+	grayImage = image.NewRGBA(copyImage.Bounds())
+
+	for x := startX; x < finalX; x++ {
+		for y := startY; y < finalY; y++ {
+			position := y*copyImage.Stride + x*4
+
+			red := copyImage.Pix[position]
+			green := copyImage.Pix[position+1]
+			blue := copyImage.Pix[position+2]
+
 			redValue := helper.REDWEIGHT * float64(red)
 			greenValue := helper.GREENWEIGHT * float64(green)
 			blueValue := helper.BLUEWEIGHT * float64(blue)
+
 			sum := redValue + greenValue + blueValue
-			newColor := color.Gray16{Y: uint16(sum)}
-			grayImage.Set(x, y, newColor)
+
+			grayImage.Pix[position] = uint8(sum)
+			grayImage.Pix[position+1] = uint8(sum)
+			grayImage.Pix[position+2] = uint8(sum)
 		}
 	}
 	return
